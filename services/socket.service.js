@@ -58,7 +58,11 @@ export function setupSocketAPI(http) {
 
         socket.on('get-students-count', codeblockId => {
             const studentCount = gIo.sockets.adapter.rooms.get(codeblockId)?.size - 1 || 0;
-            socket.emit('students-count', studentCount)
+            broadcast({
+                type: 'students-count',
+                data: studentCount,
+                room: codeblockId
+            })
         })
     })
 }
@@ -73,7 +77,7 @@ function emitTo({ type, data, label }) {
     else gIo.emit(type, data)
 }
 
-async function broadcast({ type, data, room = null, userId }) {
+async function broadcast({ type, data, room = null }) {
     logger.info(`Broadcasting event: ${type}`)
 
     if (room) {
