@@ -1,11 +1,12 @@
-import mongoose from 'mongoose';
-import Codeblock from '../../models/codeblockModel.js';
+import { codeblocksService } from './codeblocks.service.js';
 
 export const getCodeblocks = async (req, res) => {
     try {
-        const codeblocks = await Codeblock.find();
-        console.log('Database:', mongoose.connection.db.databaseName);
-        console.log('Fetched codeblocks:', codeblocks);
+        const filterBy = {
+            title: req.query.title || ''
+        }
+        console.log("filterBy", filterBy)
+        const codeblocks = await codeblocksService.query(filterBy);
         res.send(codeblocks);
     } catch (error) {
         console.error('Error fetching codeblocks:', error);
@@ -16,8 +17,7 @@ export const getCodeblocks = async (req, res) => {
 export const getCodeblock = async (req, res) => {
     try {
         const { codeblockId } = req.params;
-        const codeblock = await Codeblock.findById(codeblockId);
-
+        const codeblock = await codeblocksService.getById(codeblockId);
         if (!codeblock) {
             return res.status(404).send({ error: 'Codeblock not found' });
         }
@@ -28,3 +28,6 @@ export const getCodeblock = async (req, res) => {
         res.status(500).send({ error: 'Failed to fetch codeblock' });
     }
 };
+
+// logger service
+// filter
