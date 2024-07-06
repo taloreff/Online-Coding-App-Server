@@ -27,6 +27,3 @@ export const getCodeblock = async (req, res) => {
         res.status(500).send({ error: 'Failed to fetch codeblock' });
     }
 };
-
-// logger service
-// filter

@@ -6,6 +6,7 @@ import path from "path";
 import { config } from "dotenv";
 import './db/db.js';
 import { codeblocksRoutes } from './api/codeblocks/codeblocks.routes.js'
+import { setupSocketAPI } from './services/socket.service.js '
 
 
 config();
@@ -25,6 +26,8 @@ app.use(express.json());
 
 //Routes
 app.use('/api/codeblocks', codeblocksRoutes)
+
+setupSocketAPI(server)
 
 app.get("/**", (req, res) => {
     res.sendFile(path.resolve('public/index.html'));
