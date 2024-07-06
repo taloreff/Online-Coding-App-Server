@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import Codeblock from '../../models/codeblockModel.js';
+import { logger } from '../../services/logger.service.js';
 
 export const codeblocksService = {
     query,
@@ -9,11 +9,12 @@ export const codeblocksService = {
 async function query(filterBy) {
     try {
         const criteria = _buildCriteria(filterBy)
+        logger.debug('criteria:', criteria)
         const codeblocks = await Codeblock.find(criteria);
-        console.log("codeblocks", codeblocks);
+        logger.debug('codeblocks:', codeblocks)
         return codeblocks;
     } catch (error) {
-        console.error('Error fetching codeblocks:', error);
+        logger.error(error)
         throw error;
     }
 }

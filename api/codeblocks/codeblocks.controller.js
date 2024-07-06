@@ -5,7 +5,6 @@ export const getCodeblocks = async (req, res) => {
         const filterBy = {
             title: req.query.title || ''
         }
-        console.log("filterBy", filterBy)
         const codeblocks = await codeblocksService.query(filterBy);
         res.send(codeblocks);
     } catch (error) {
