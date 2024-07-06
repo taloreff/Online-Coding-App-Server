@@ -27,14 +27,15 @@ export function setupSocketAPI(http) {
 
         socket.on('join-codeblock', codeblockId => {
             socket.join(codeblockId)
+            let role = 'Student'
             if (!mentors[codeblockId]) {
                 mentors[codeblockId] = socket.id
-                socket.emit('set-role', 'mentor')
+                role = 'Mentor'
                 logger.info(`Mentor joined codeblock [id: ${codeblockId}] [socket: ${socket.id}]`)
             } else {
-                socket.emit('set-role', 'student')
                 logger.info(`Student joined codeblock [id: ${codeblockId}] [socket: ${socket.id}]`)
             }
+            socket.emit('set-role', role)
             updateStudentCount(codeblockId)
         })
 
@@ -69,7 +70,7 @@ export function setupSocketAPI(http) {
 
 function updateStudentCount(codeblockId) {
     const studentCount = gIo.sockets.adapter.rooms.get(codeblockId)?.size - 1 || 0;
-    gIo.to(codeblockId).emit('update-students-count', studentCount);
+    gIo.to(codeblockId).emit('students-count', studentCount);
 }
 
 function emitTo({ type, data, label }) {
