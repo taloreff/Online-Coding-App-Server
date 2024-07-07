@@ -1,6 +1,5 @@
 import express from "express";
 import { createServer } from "node:http";
-import { Server } from "socket.io";
 import cors from "cors";
 import path from "path";
 import { config } from "dotenv";
@@ -23,6 +22,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.static(path.resolve('public')))
 
 //Routes
 app.use('/api/codeblocks', codeblocksRoutes)
