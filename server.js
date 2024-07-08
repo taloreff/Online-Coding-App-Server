@@ -6,6 +6,7 @@ import { config } from "dotenv";
 import './db/db.js';
 import { codeblocksRoutes } from './api/codeblocks/codeblocks.routes.js'
 import { setupSocketAPI } from './services/socket.service.js '
+import { logger } from "./services/logger.service.js";
 
 
 config();
@@ -34,5 +35,5 @@ app.get("/**", (req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`);
 });

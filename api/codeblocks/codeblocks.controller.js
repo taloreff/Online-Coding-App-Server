@@ -8,7 +8,7 @@ export const getCodeblocks = async (req, res) => {
         const codeblocks = await codeblocksService.query(filterBy);
         res.send(codeblocks);
     } catch (error) {
-        console.error('Error fetching codeblocks:', error);
+        logger.error(error)
         res.status(500).send({ error: 'Failed to fetch codeblocks' });
     }
 };
@@ -23,7 +23,9 @@ export const getCodeblock = async (req, res) => {
 
         res.send(codeblock);
     } catch (error) {
-        console.error('Error fetching codeblock:', error);
+        logger.error(error)
         res.status(500).send({ error: 'Failed to fetch codeblock' });
     }
 };
+
+
