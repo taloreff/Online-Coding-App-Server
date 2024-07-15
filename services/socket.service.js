@@ -16,14 +16,14 @@ export function setupSocketAPI(http) {
                 if (mentors[codeblockId] === socket.id) {
                     delete mentors[codeblockId]
                     broadcast({
-                        type: 'mentor-left',
+                        type: 'redirect-to-lobby',
                         data: { message: 'Mentor has left the code block' },
                         room: codeblockId
                     })
-                    gIo.to(codeblockId).emit('redirect-to-lobby')
                 }
             }
         })
+
 
         socket.on('join-codeblock', codeblockId => {
             socket.join(codeblockId)
