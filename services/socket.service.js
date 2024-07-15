@@ -24,7 +24,6 @@ export function setupSocketAPI(http) {
             }
         })
 
-
         socket.on('join-codeblock', codeblockId => {
             socket.join(codeblockId)
             let role = 'Student'
@@ -44,11 +43,10 @@ export function setupSocketAPI(http) {
             if (mentors[codeblockId] === socket.id) {
                 delete mentors[codeblockId]
                 broadcast({
-                    type: 'mentor-left',
+                    type: 'redirect-to-lobby',
                     data: { message: 'Mentor has left the code block' },
                     room: codeblockId
                 })
-                gIo.to(codeblockId).emit('redirect-to-lobby')
             }
             updateStudentCount(codeblockId)
         })
@@ -58,12 +56,7 @@ export function setupSocketAPI(http) {
         })
 
         socket.on('get-students-count', codeblockId => {
-            const studentCount = gIo.sockets.adapter.rooms.get(codeblockId)?.size - 1 || 0;
-            broadcast({
-                type: 'students-count',
-                data: studentCount,
-                room: codeblockId
-            })
+            updateStudentCount(codeblockId)
         })
     })
 }
@@ -71,11 +64,6 @@ export function setupSocketAPI(http) {
 function updateStudentCount(codeblockId) {
     const studentCount = gIo.sockets.adapter.rooms.get(codeblockId)?.size - 1 || 0;
     gIo.to(codeblockId).emit('students-count', studentCount);
-}
-
-function emitTo({ type, data, label }) {
-    if (label) gIo.to('watching:' + label.toString()).emit(type, data)
-    else gIo.emit(type, data)
 }
 
 async function broadcast({ type, data, room = null }) {
@@ -90,27 +78,9 @@ async function broadcast({ type, data, room = null }) {
     }
 }
 
-async function _getAllSockets() {
-    // return all Socket instances
-    const sockets = await gIo.fetchSockets()
-    return sockets
-}
-
-async function _printSockets() {
-    const sockets = await _getAllSockets()
-    console.log(`Sockets: (count: ${sockets.length}):`)
-    sockets.forEach(_printSocket)
-}
-
-function _printSocket(socket) {
-    console.log(`Socket - socketId: ${socket.id} userId: ${socket.userId}`)
-}
-
 export const socketService = {
     // set up the sockets service and define the API
     setupSocketAPI,
-    // emit to everyone / everyone in a specific room (label)
-    emitTo,
     // Send to all sockets (otherwise broadcast to a room / to all)
     broadcast,
 }
